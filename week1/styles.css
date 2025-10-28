@@ -1,0 +1,43 @@
+
+.wiki-img{
+    width: 100%;
+}
+
+.wiki-header{
+    text-align: center;
+}
+
+.wiki-item{
+    margin-right: 10px;
+    margin-left: 10px;
+    box-shadow: 8px 5px 5px #808080;
+}
+
+.wiki-content{
+    padding: 10px;
+}
+
+/* mediea queries*/
+
+@media (min-width:600px) {
+    .wiki-content{
+        display: flex;
+        flex-direction: row-reverse;
+    }
+
+    .wiki-text{
+        min-width: 50%;
+        max-width: 50%;
+    }
+
+    .img-container{
+        min-width: 50%;
+        max-width: 50%;
+    }
+
+    .container{
+        max-width: 960px;
+        margin: 0 auto;
+    }
+    
+}

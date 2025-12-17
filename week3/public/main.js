@@ -1,10 +1,11 @@
-const Submit=document.getElementById("submit")
+const Submit_button=document.getElementById("submit-button")
+const form= document.getElementById("userForm")
 
-
-Submit.addEventListener("click", async function() {
+form.addEventListener("submit", async function(e) {
+    e.preventDefault()
     const name = document.getElementById("name")
     const email = document.getElementById("email")
-    console.log(name.value)
+    //console.log(name.value)
 
     const response = await fetch("/users", {
         method: "POST",
@@ -16,7 +17,9 @@ Submit.addEventListener("click", async function() {
     const userJson = await response.json()
     console.log(userJson)
 
-    //addNewUser(name.value, email.value)
+    name.value= ""
+    email.value=""
+
 })
 
 const getUsers= document.getElementById("getUsers")

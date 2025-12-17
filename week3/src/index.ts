@@ -62,7 +62,7 @@ router.post("/users", (req: Request, res: Response) => {
         const {name,email}= req.body
         const addUser: TUser= {name,email}
         users.push(addUser)
-        res.json({message: "user successfully added"})
+        res.json({message: "User successfully added"})
 
     } catch (error: any) {
         console.error(`Error parsing JSON: ${error}`)

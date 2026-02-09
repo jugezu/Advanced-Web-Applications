@@ -1,0 +1,30 @@
+.header{
+    display: flex;
+    justify-content: space-between;
+    background-color: ghostwhite;
+    align-items: center;
+    
+}
+
+.headerText{
+    color: lightcoral;
+    margin-left: 30px;
+}
+
+.langbtn{
+    margin-right: 10px;
+    margin-left: 10px;
+    background-color:lightcoral;
+}
+
+/*how to select last child: https://stackoverflow.com/questions/24151714/how-to-apply-css-to-last-child-button  */
+.langbtn:last-child{
+    margin-right: 30px;
+}
+
+.navigation{
+    margin-left: 10px;
+    margin-right: 10px;    
+    color: lightcoral;
+    font-size: large;
+}

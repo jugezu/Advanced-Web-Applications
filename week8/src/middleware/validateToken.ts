@@ -4,15 +4,16 @@ import dotenv from "dotenv"
 
 dotenv.config()
 
-interface CustomRequest extends Request{
+export interface CustomRequest extends Request{
     user?: JwtPayload
 
 }
 
+// Normal user
 export const validateToken= (req: CustomRequest, res: Response, next: NextFunction)=>{
     const token: string | undefined= req.header('authorization')?.split(" ")[1]
 
-    if(!token) return res.status(401).json({message: "Access denied, missing token"})
+    if(!token) return res.status(401).json({message: "Token not found."})
 
     try {
         const verified: JwtPayload = jwt.verify(token, process.env.SECRET as
@@ -22,6 +23,15 @@ export const validateToken= (req: CustomRequest, res: Response, next: NextFuncti
         next()
 
     } catch (error: any) {
-        res.status(401).json({message: "Access denied, missing token"})
+        res.status(401).json({message: "Token not found."})
     }
+}
+
+// Admin user
+export const validateAdmin=(req: CustomRequest, res: Response, next: NextFunction)=>{
+    if(!req.user || !req.user.isAdmin){
+        return res.status(403).json({message:"Access denied."})
+        
+    }
+    next()
 }

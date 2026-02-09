@@ -1,6 +1,8 @@
 const form= document.getElementById("registerForm")
 const email= document.getElementById("email")
 const password= document.getElementById("password")
+const username=document.getElementById("username")
+const isAdmin=document.getElementById("isAdmin")
 
 const initializeRegister = () => {
     form.addEventListener("submit", (event) => {
@@ -13,7 +15,10 @@ const fetchData = async (event) =>{
 
     const formData= {
         email: email.value,
-        password: password.value
+        username: username.value,
+        password: password.value,
+        isAdmin: isAdmin.checked
+        
     }
 
     try {
@@ -30,7 +35,7 @@ const fetchData = async (event) =>{
         console.log("Error when trying to register")
 
     } else{
-        window.location.href ="/login.html"
+        window.location.href ="/"
     }
         
     } catch (error) {

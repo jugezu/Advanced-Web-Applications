@@ -1,12 +1,12 @@
 import {Request, Response, Router} from "express"
-import { compile } from "morgan"
 import {User, IUser} from "./models/User"
-import { resourceLimits } from "node:worker_threads"
+import { Topic, ITopic } from "./models/Topic"
 import { body, Result, ValidationError, validationResult } from 'express-validator'
 import jwt, {JwtPayload} from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
-import { validateToken } from './middleware/validateToken'
+import { validateToken, validateAdmin, CustomRequest} from './middleware/validateToken'
 import dotenv from "dotenv"
+import {registerValidation, loginValidation} from "./validators/inputValidation"
 
 dotenv.config()
 
@@ -14,8 +14,7 @@ const router: Router = Router()
 
 
 // POST /api/user/register
-router.post("/api/user/register" ,body("email").trim().isLength({min: 3}).escape(),
-    body("password").isLength({min: 3}),
+router.post("/api/user/register" ,registerValidation,
     async (req: Request, res: Response) => {
 
         //checking error
@@ -32,24 +31,23 @@ router.post("/api/user/register" ,body("email").trim().isLength({min: 3}).escape
         console.log(user)
 
         if(user){
-            // 403 = forbidden
-            return res.status(403).json({email: "email already in use"})
+            // same email twice
+            return res.status(403).json({email: "Email already in use."})
         }
         
         const salt : string =bcrypt.genSaltSync(10)
         const hash : string =bcrypt.hashSync(req.body.password,salt)
 
-        /*const newUser: IUser={
-            email: req.body.email,
-            password: hash
-        }*/
+        
         const newUser =await User.create({
             email: req.body.email,
-            password: hash
+            password: hash,
+            username: req.body.username,
+            isAdmin: req.body.isAdmin
         })
         
         
-
+        // if gc error remember to try res.json(newUser)
         return res.status(200).json(newUser)
 
     } catch (error: any) {
@@ -57,44 +55,33 @@ router.post("/api/user/register" ,body("email").trim().isLength({min: 3}).escape
     }
 })
 
-// GET /api/user/list
-router.get("/api/user/list", async (req: Request, res: Response) => {
-    try {
-        const users: IUser[] = await User.find()
-        return res.status(200).json(users)
-    } catch (error: any) {
-        console.log(`Error while fecthing users ${error}`)
-        return res.status(500).json({error: "Internal Server Error"})
-    }
-
-})
-
-
 // POST /api/user/login
-router.post("/api/user/login",body("email").trim().escape(), body("password").escape(),
+router.post("/api/user/login",loginValidation,
     async (req: Request, res: Response) =>{
         
         try {
             const user: IUser | null = await User.findOne({email: req.body.email}) 
-            //const user = users.find(user => user.email ===req.body.email)
-
+            
             //console.log(user)
 
             if(!user){
-                return res.status(401).json({message: "Login failed"})
+                return res.status(404).json({message: "User not found"})
             }
 
             if(bcrypt.compareSync(req.body.password, user.password)){
+
                 const jwtPayload: JwtPayload={
-                    //id: user._id,
-                    email: user.email
+                    _id: user._id,
+                    username: user.username,
+                    isAdmin: user.isAdmin
                 }
-                const token: string = jwt.sign(jwtPayload, process.env.SECRET as string, { expiresIn: "2m"})
+                const token: string = jwt.sign(jwtPayload, process.env.SECRET as string, { expiresIn: "20m"})
                 
                 return res.status(200).json({success: true, token})
             }
 
-            return res.status(401).json({message: "Login failed" })
+            
+            return res.status(401).json({message: "Invalid password" })
 
         } catch (error: any) {
             console.error(`Error during user login ${error}`)
@@ -102,12 +89,45 @@ router.post("/api/user/login",body("email").trim().escape(), body("password").es
         }
 })
 
-// GET /api/private
-router.get("/api/private" ,validateToken, async (req: Request, res: Response) =>{
-
-    return res.status(200).json({message: "This is protected secure route!"})
-
+// GET /api/topics
+router.get("/api/topics", async (req: Request, res: Response) => {
+    try {
+        const topics: ITopic[] = await Topic.find()
+        return res.status(200).json(topics)
+    } catch (error: any) {
+        console.log(`Error while fecthing topics ${error}`)
+        return res.status(500).json({error: "Internal Server Error"})
+    }
 })
+
+// POST /api/topic
+router.post("/api/topic", validateToken, async(req: CustomRequest, res: Response)=>{
+    try {
+        const newTopic=await Topic.create({
+            title: req.body.title,
+            content: req.body.content,
+            username: req.user?.username
+            
+        })
+        return res.status(200).json(newTopic)
+    } catch (error: any) {
+        console.error(`Error while posting topic ${error}`)
+        return res.status(500).json({error: "Internal Server Error"})
+    }
+})
+
+// DELETE /api/topic/:id
+router.delete("/api/topic/:id", validateToken, validateAdmin, async (req: CustomRequest, res: Response) => {
+    
+    try {
+        await Topic.findByIdAndDelete(req.params.id)
+        return res.status(200).json({message: "Topic deleted successfully."})
+        
+    } catch (error: any) {
+        console.error(`Error while deleting topic ${error}`)
+        return res.status(500).json({error: "Internal Server Error"})
+    }
+}) 
 
 
 

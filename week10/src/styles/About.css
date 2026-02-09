@@ -1,0 +1,35 @@
+.grid-container{
+    display: grid;
+    gap: 16px;
+    padding: 16px;
+    /* help with the grid-teplate-colums: https://css-tricks.com/auto-sizing-columns-css-grid-auto-fill-vs-auto-fit/  */
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));    
+}
+
+.grid-item{
+    background-color:#f0f0f0 ;
+    padding: 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.post-title{
+    color: lightcoral;
+}
+
+.post-body{
+    color: black;
+    font-style: italic;
+}
+
+.about-page{
+    display: flex;
+    justify-content: space-around;
+    
+}
+
+.show-more-btn{
+    width: 100%;
+    color: ghostwhite;
+}

@@ -4,11 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="index.js" defer></script>
-    <title>Week7 index</title>
+    <title>Week8 index</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
 </head>
 <body>
-    <h2>Index</h2>
-    <button id="logout">Logout</button>
+  <nav>
+    <div class="nav-wrapper">
+        <div class="right">
+      <a href="#" class="brand-logo left">Forum</a>
+      
     
+
+    <ul class="right">
+        <li>
+            <form id="loginForm" class="row" type="submit">
+                <div class="input-field col">
+                    <input class="navbar-input" type="text" id="email" placeholder="email">
+                </div>
+
+                <div class="input-field col">
+                    <input class="navbar-input" type="text" id="password" placeholder="password">
+                </div>
+            
+                <div class="col button"> 
+                    <button class="btn waves-effect waves-light">Login</button>
+                </div>
+
+                <div class="col button"> 
+                    <button class="btn waves-effect waves-light" onclick="location.href='register.html'">Register</button>
+                </div>
+
+            
+            </form>
+        </li>
+        
+      </ul>
+
+    </div>
+  </nav>
+  
+    
+  <div class="container">
+    <div id="topicForm"></div>
+    <div id="topics" class="card, z-depth-2 hoverable grey lighten-2"></div>
+  </div>
+
 </body>
 </html>

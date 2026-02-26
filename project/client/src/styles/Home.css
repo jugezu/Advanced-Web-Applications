@@ -1,0 +1,5 @@
+/*this fixes weird line appearing on the screen when using Chrome. More info on the documentation.*/ 
+body{
+    transform: translateZ(0);
+}
+

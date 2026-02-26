@@ -1,0 +1,21 @@
+
+/*!important should override bootstrap css*/
+.table-primary2 th{
+    
+    /*Bootstrap warning color: https://getbootstrap.com/docs/5.1/utilities/colors/ */
+    background-color: #ffc107 !important;
+}
+
+/* Bootstrap CSS is very difficult to edit
+but they do offer some help with the editable table variants.
+Without the !important property, those wouldn't work.
+
+source: https://getbootstrap.com/docs/5.3/content/tables/#overview */
+
+.table{
+    --bs-table-striped-bg: Khaki !important;
+    --bs-table-bg: rgba(240, 230, 140, 0.63) !important;
+    /*--bs-table-color: goldenrod !important;*/
+    
+}
+
